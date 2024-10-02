@@ -26,12 +26,11 @@ public class UIManager : MonoBehaviour
 
     public Text hitTargetCountText;
     int hitCount = 0;
-
-    // 신호등
-    public GameObject[] TLights;
-    private Color originColor;
-    Color tempColor;
-    private int targetNumber; // 관 숫자
+    public enum arrowMode
+    {
+        ArrowTracking,
+        Default
+    }
 
     void Awake()
     {
@@ -55,66 +54,7 @@ public class UIManager : MonoBehaviour
        SceneManager.LoadScene(1);
     }
 
-    public void SetTLights()
-    {
-        TLights = GameObject.FindGameObjectsWithTag("TLight");
-        String TLName = "TL";
-        for(int i = 0; i < 3; i++)
-        {
-            String checkTLName = TLName + (i + 1).ToString();
-            GameObject currentTL = TLights[i];
-            if(currentTL.gameObject.name != checkTLName)
-            {
-                for(int j = 0; j < 3; j++)
-                {
-                    if(checkTLName == TLights[j].gameObject.name)
-                    {
-                        GameObject tmp = TLights[i];
-                        TLights[i] = TLights[j];
-                        TLights[j] = tmp;
-                    }
-                }
-            }
-        }
-        for(int i = 0; i < 3; i++) { originColor = TLights[i].GetComponent<Renderer>().material.color; }
-    }
-    public void SetBlinkTLight(int num)
-    {
-        targetNumber = num - 1;
-        StartCoroutine(BlinkTLight());
-    }
-    IEnumerator BlinkTLight()
-    {
-        TLights[targetNumber].GetComponent<Renderer>().material.color = new Color(1, 0, 0, 1);
-        tempColor = TLights[targetNumber].GetComponent<Renderer>().material.color;
-
-        int count = 0;
-        while (count < 2)
-        {
-            while (TLights[targetNumber].GetComponent<Renderer>().material.color.r > 0f)
-            {
-                tempColor.r -= 0.1f;
-                TLights[targetNumber].GetComponent<Renderer>().material.color = tempColor;
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            yield return new WaitForSeconds(0.5f);
-
-            while (TLights[targetNumber].GetComponent<Renderer>().material.color.r < 1f)
-            {
-                tempColor.r += 0.1f;
-                TLights[targetNumber].GetComponent<Renderer>().material.color = tempColor;
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            yield return new WaitForSeconds(0.5f);
-            count++;
-        }
-
-        TLights[targetNumber].GetComponent<Renderer>().material.color = originColor;
-    }
-
-     void ToggleMenu()
+    void ToggleMenu()
     {
         isMenuActive = !isMenuActive;
         menuPanel.SetActive(isMenuActive);
@@ -134,7 +74,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-       void SetDayMode()
+    void SetDayMode()
     {
         sceneLight.color = Color.white;     // 조명의 색상을 밝은 흰색으로 설정
         RenderSettings.ambientLight = Color.white; // 씬의 전체 조명 색상을 흰색으로
@@ -153,6 +93,7 @@ public class UIManager : MonoBehaviour
         //Debug.Log("야간 모드 활성화");
     }
 
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

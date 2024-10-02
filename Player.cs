@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        UIManager.instance.SetTLights();
+
     }
 
     public void Shoot()
@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
             followCamera.Follow = newArrow.transform;
             followCamera.LookAt = newArrow.transform;
         }
+        StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.isFollowing, 0));
     }
     void Update()
     {

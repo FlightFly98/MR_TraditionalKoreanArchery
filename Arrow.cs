@@ -93,7 +93,6 @@ public class Arrow : MonoBehaviour
         }
     }
 
-
     void FixedUpdate()
     {
         if (!GameManager.isHit && !isThisHit)

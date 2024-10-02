@@ -29,24 +29,26 @@ public class GameManager : MonoBehaviour
     public float kkagjHandYaw; // 깍지손 손등 회전 측정
     public float zoomHandRoll; // 줌손 화살 각도 측정
     public float zoomHandPitch; // 줌손 팔꿈치 엎어짐 측정
-
     public float zoomHandYaw; // 줌손 팔꿈치 엎어짐 측정
 
     public float startTime = 0.0f;   // 발시 순간 측정 시작
     public float endTime = 0.0f;     // 충격 센서 작동 측정 끝 시간
+    public float elapsedTime;
+    public float limitDistance = 7; // 궁사 ~ 천까지 거리
     public bool isPressureHigh = false;  // 압력 센서를 눌렀는지 확인
     public bool isImpactDetected = false; // 현실에서 충격 센서 감지 확인
-    public float limitDistance = 7; // 궁사 ~ 천까지 거리
 
     // 활 & 화살 정보(Rssi)
 
-    public float poundForce; // 파운드
-    public float fullLength; // 만작 길이
+    public float poundForce = 15.0f; // 파운드
+    public float fullLength = 2.65f * 0.303030f; // 만작 길이
     public float pulledDistance; // 당긴 길이
     public float bowK; // 활 탄성 계수
+    public bool checkDistanceMode = true;
 
     public void SetGame()
     {
+        SetBowK();
         SetArrowWeight(UIManager.instance.arrowWeightInfo);
     }
     public float GetArrowWeight() { return arrowWeight; }
@@ -60,31 +62,34 @@ public class GameManager : MonoBehaviour
     }
     public void SetInitialVelocity()
     {
-        if(!isPressureHigh && isImpactDetected)
+        if(checkDistanceMode)
         {
-            endTime = Time.time;
-            float elapsedTime = endTime - startTime;
-            initialVelocity = limitDistance / elapsedTime;
+            if(!isPressureHigh && isImpactDetected)
+            {
+                endTime = Time.time;
+                elapsedTime = endTime - startTime;
+                initialVelocity = limitDistance / elapsedTime;
 
-            Debug.Log("InitialVelocity: " + initialVelocity);
-            Debug.Log("elapsedTime: " + elapsedTime);
+                Debug.Log("InitialVelocity: " + initialVelocity);
+                Debug.Log("elapsedTime: " + elapsedTime);
 
-            startTime = 0;
-            endTime = 0;
+                startTime = 0;
+                endTime = 0;
 
-            Debug.Log(startTime + ", " + endTime);
+                Debug.Log(startTime + ", " + endTime);
 
-            isImpactDetected = false;
+                isImpactDetected = false;
+            }
         }
     }
 
     public void SetInitialVelocityRssi()
     {
-        //SetPulledLength(distance);
-        SetBowK();
-
-        initialVelocity =
-            Mathf.Sqrt((GetBowK() * Mathf.Pow(GetPulledLength(), 2)) / GetArrowWeight());
+        if(!checkDistanceMode)
+        {
+            initialVelocity =
+                Mathf.Sqrt((GetBowK() * Mathf.Pow(GetPulledLength(), 2)) / GetArrowWeight());
+        }
     }
 
     public float GetlaunchAngle()
@@ -129,8 +134,7 @@ public class GameManager : MonoBehaviour
     }
     public void SetPoundForce(string inputPound)
     {
-        float pound = 0f;
-        pound = float.Parse(inputPound);
+        float pound = float.Parse(inputPound);
         poundForce = (pound * 0.453592f) * 9.81f;
         //Debug.Log("PoundForce: " + poundForce);
     }

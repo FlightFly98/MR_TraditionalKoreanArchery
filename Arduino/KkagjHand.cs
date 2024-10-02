@@ -102,6 +102,7 @@ public class KkagjHand : ArduinoBase
             //Debug.Log("KkagiHandTime: " + GameManager.instance.startTime);
             GameManager.instance.isPressureHigh = false;
             GameManager.instance.SetlaunchAngle();
+            GameManager.instance.SetInitialVelocityRssi();
             Player.instance.valSi = true;
             checkValsi = false;
         }
@@ -148,7 +149,6 @@ public class KkagjHand : ArduinoBase
         // 거리 계산
         float distance = CalculateDistance(filteredRSSI);
 
-        // 거리 제한: 최대 1미터로 제한
         distance = Mathf.Min(distance, 1.0f);
 
         GameManager.instance.SetPulledLength(distance);

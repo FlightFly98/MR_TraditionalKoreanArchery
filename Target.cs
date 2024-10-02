@@ -10,10 +10,12 @@ public class Target : MonoBehaviour
     int arrowHashCode = 0;
 
     string thisTargetName;
+    int thisTargetNum;
 
     void Start()
     {
         thisTargetName = this.gameObject.name;
+        thisTargetNum = int.Parse(thisTargetName.Substring(thisTargetName.IndexOf('_') + 1));
     }
     
     public void OnTriggerEnter(Collider other)
@@ -28,9 +30,8 @@ public class Target : MonoBehaviour
             //rb.constraints = RigidbodyConstraints.FreezeAll;
             //rb.isKinematic = true;
 
-            UIManager.instance.SetHitCount();
-            UIManager.instance.SetBlinkTLight(int.Parse(thisTargetName.Substring(thisTargetName.IndexOf('_') + 1)));            
-
+            StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.hitTarget, thisTargetNum));
+            StartCoroutine(TLight.instance.BlinkTLight(thisTargetNum));
             //Debug.Log("관중");
         }
 
