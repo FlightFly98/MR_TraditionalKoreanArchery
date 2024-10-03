@@ -7,13 +7,16 @@ using UnityEngine.UI;
 
 public class Target : MonoBehaviour
 {
+    public static Target instance;
     int arrowHashCode = 0;
 
     string thisTargetName;
     int thisTargetNum;
+    public TLight TL;
 
     void Start()
     {
+        instance = this;
         thisTargetName = this.gameObject.name;
         thisTargetNum = int.Parse(thisTargetName.Substring(thisTargetName.IndexOf('_') + 1));
     }
@@ -31,7 +34,7 @@ public class Target : MonoBehaviour
             //rb.isKinematic = true;
 
             StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.hitTarget, thisTargetNum));
-            StartCoroutine(TLight.instance.BlinkTLight(thisTargetNum));
+            StartCoroutine(TL.BlinkTLight(thisTargetNum));
             //Debug.Log("관중");
         }
 

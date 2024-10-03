@@ -46,6 +46,9 @@ public class GameManager : MonoBehaviour
     public float bowK; // 활 탄성 계수
     public bool checkDistanceMode = true;
 
+    public Vector3 windDirection = new Vector3(1, 0, 0);
+    public float windStrength = 5.0f;   
+
     public void SetGame()
     {
         SetBowK();

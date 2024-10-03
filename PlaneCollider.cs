@@ -10,7 +10,7 @@ public class PlaneCollider : MonoBehaviour
         {
             Debug.Log("on");
             GameManager.isHit = true;
-            StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.main, 0));
+            //StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.main, 0));
 
             //Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
             //rb.constraints = RigidbodyConstraints.FreezeAll;

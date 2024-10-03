@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.Numerics;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,7 +19,10 @@ public class UIManager : MonoBehaviour
     public GameObject menuPanel;
     private bool isMenuActive = false;
     public Button dayButton;
-    public Button nightButton; 
+    public Button nightButton;
+    public Button Btn_145m;
+    public Button Btn_50m;
+    public Button Btn_30m;
     public Light sceneLight; 
     public Material daySkybox;
     public Material nightSkybox;
@@ -58,8 +62,13 @@ public class UIManager : MonoBehaviour
     {
         isMenuActive = !isMenuActive;
         menuPanel.SetActive(isMenuActive);
+
         dayButton.onClick.AddListener(SetDayMode);
         nightButton.onClick.AddListener(SetNightMode);
+
+        Btn_145m.onClick.AddListener(Set145mMode);
+        Btn_50m.onClick.AddListener(Set50mMode);
+        Btn_30m.onClick.AddListener(Set30mMode);
 
         // 메뉴가 활성화되면 마우스 커서 활성화
         if (isMenuActive)
@@ -93,7 +102,24 @@ public class UIManager : MonoBehaviour
         //Debug.Log("야간 모드 활성화");
     }
 
-    
+    void Set145mMode()
+    {
+        Player.instance.transform.position = new UnityEngine.Vector3(0, Player.instance.transform.position.y, 0);
+        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.settingMode.M_145);
+    }
+
+    void Set50mMode()
+    {
+        Player.instance.transform.position = new UnityEngine.Vector3(0, Player.instance.transform.position.y, 145 - 50);
+        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.settingMode.M_50);
+    }
+
+    void Set30mMode()
+    {
+        Player.instance.transform.position = new UnityEngine.Vector3(0, Player.instance.transform.position.y, 145 - 30);
+        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.settingMode.M_30);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

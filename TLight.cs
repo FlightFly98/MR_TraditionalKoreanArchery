@@ -20,7 +20,6 @@ public class TLight : MonoBehaviour
         originColor = this.GetComponent<Renderer>().material.color;
         thisTLName = this.name;
         TLNumber = int.Parse(thisTLName.Substring(thisTLName.IndexOf('_') + 1));
-        Debug.Log(TLNumber);
     }
 
     public IEnumerator BlinkTLight(int targetNum)

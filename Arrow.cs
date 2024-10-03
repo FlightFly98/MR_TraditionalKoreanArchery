@@ -21,6 +21,8 @@ public class Arrow : MonoBehaviour
     private float crossSectionalArea; // 단면적 (m²)
     float arrowMass = 0.028125f; // 화살의 질량 (kg)
 
+    
+
     void Start()
     {
         ID = this.gameObject.GetInstanceID();
@@ -58,8 +60,15 @@ public class Arrow : MonoBehaviour
         // 속도 크기 계산
         float speed = velocity.magnitude;
 
+        // 바람의 상대 속도 계산 (relative wind velocity = wind speed - arrow velocity)
+        Vector3 relativeWindVelocity = GameManager.instance.windDirection.normalized * GameManager.instance.windStrength - velocity;
+
+        // 바람의 상대 속도 크기 계산
+        float relativeWindSpeed = relativeWindVelocity.magnitude;
+
         // 공기 저항력 계산
-        Vector3 dragForce = -0.5f * airDensity * speed * speed * dragCoefficient * crossSectionalArea * velocity.normalized;
+        Vector3 dragForce = -0.5f * airDensity * dragCoefficient * crossSectionalArea * relativeWindSpeed * relativeWindSpeed * relativeWindVelocity.normalized;
+        //Vector3 dragForce = -0.5f * airDensity * speed * speed * dragCoefficient * crossSectionalArea * velocity.normalized;
 
         // 가속도 계산
         Vector3 gravityVector = new Vector3(0f, Physics.gravity.y, 0f);
@@ -108,6 +117,10 @@ public class Arrow : MonoBehaviour
             isThisHit = true;
             velocity = Vector3.zero;
             Debug.Log(other.tag);
+            if(other.tag != "Target")
+            {
+                StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.main, 0));
+            }
         }
     }
 }

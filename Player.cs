@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public static Player instance;
 
     public GameObject arrow;
+    public Target target;
 
     public UnityEvent arrowCreated;
 
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-
+        this.transform.position = new Vector3(0, target.transform.position.y + 1.5f, 0);
     }
 
     public void Shoot()

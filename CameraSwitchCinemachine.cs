@@ -20,6 +20,13 @@ public class CameraSwitchCinemachine : MonoBehaviour
         main
     }
 
+    public enum settingMode
+    {
+        M_145,
+        M_50,
+        M_30
+    }
+
     void Awake()
     {
         instance = this;
@@ -33,6 +40,7 @@ public class CameraSwitchCinemachine : MonoBehaviour
         //}
     }
 
+    
     public IEnumerator SwitchCamera(arrowState state, int targetNum)
     {
         switch(state)
@@ -73,4 +81,28 @@ public class CameraSwitchCinemachine : MonoBehaviour
                 break;
         }
     }
+
+    public void SetCameraPosition(settingMode mode)
+    {
+        switch(mode)
+        {
+            case settingMode.M_145:
+            mainCamera.transform.position = new Vector3(0, Player.instance.transform.position.y, 70);
+            followCamera.transform.position = Player.instance.transform.position;
+            break;
+
+            case settingMode.M_50:
+            mainCamera.transform.position = new Vector3(Player.instance.transform.position.x, Player.instance.transform.position.y, Player.instance.transform.position.z);
+            followCamera.transform.position = Player.instance.transform.position;
+            break;
+
+            case settingMode.M_30:
+            mainCamera.transform.position = new Vector3(Player.instance.transform.position.x, Player.instance.transform.position.y, 130);
+            followCamera.transform.position = Player.instance.transform.position;
+            break;
+            
+        }
+    }
+
+    
 }
