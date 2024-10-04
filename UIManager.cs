@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
     public Button Btn_145m;
     public Button Btn_50m;
     public Button Btn_30m;
+    public Button DefaultBtn;
+    public Button chaseArrowBtn;
     public Light sceneLight; 
     public Material daySkybox;
     public Material nightSkybox;
@@ -30,11 +32,12 @@ public class UIManager : MonoBehaviour
 
     public Text hitTargetCountText;
     int hitCount = 0;
-    public enum arrowMode
+    public enum CameraMode
     {
         ArrowTracking,
         Default
     }
+    private CameraMode cameraMode;
 
     void Awake()
     {
@@ -69,6 +72,9 @@ public class UIManager : MonoBehaviour
         Btn_145m.onClick.AddListener(Set145mMode);
         Btn_50m.onClick.AddListener(Set50mMode);
         Btn_30m.onClick.AddListener(Set30mMode);
+
+        DefaultBtn.onClick.AddListener(SetDefaultMode);
+        chaseArrowBtn.onClick.AddListener(SetChaseArrowMode);
 
         // 메뉴가 활성화되면 마우스 커서 활성화
         if (isMenuActive)
@@ -105,24 +111,39 @@ public class UIManager : MonoBehaviour
     void Set145mMode()
     {
         Player.instance.transform.position = new UnityEngine.Vector3(0, Player.instance.transform.position.y, 0);
-        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.settingMode.M_145);
+        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.DistanceMode.M_145);
     }
 
     void Set50mMode()
     {
         Player.instance.transform.position = new UnityEngine.Vector3(0, Player.instance.transform.position.y, 145 - 50);
-        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.settingMode.M_50);
+        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.DistanceMode.M_50);
     }
 
     void Set30mMode()
     {
         Player.instance.transform.position = new UnityEngine.Vector3(0, Player.instance.transform.position.y, 145 - 30);
-        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.settingMode.M_30);
+        CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.DistanceMode.M_30);
+    }
+
+    void SetChaseArrowMode()
+    {
+        cameraMode = CameraMode.ArrowTracking;
+    }
+
+    void SetDefaultMode()
+    {
+        cameraMode = CameraMode.Default;
+    }
+
+    public CameraMode GetCameraMode()
+    {
+        return cameraMode;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             ToggleMenu();
         }

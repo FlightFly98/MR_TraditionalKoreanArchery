@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
             followCamera.Follow = newArrow.transform;
             followCamera.LookAt = newArrow.transform;
         }
-        StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.isFollowing, 0));
+        CameraSwitchCinemachine.instance.PlaySwitchCamera(CameraSwitchCinemachine.arrowState.isFollowing, null);
     }
     void Update()
     {

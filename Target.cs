@@ -23,22 +23,16 @@ public class Target : MonoBehaviour
     
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Arrow") // && arrowHashCode != other.GetHashCode())
+        if (other.tag == "Arrow")
         {
             GameManager.isHit = true;
 
             arrowHashCode = other.GetHashCode();
 
-            //Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-            //rb.constraints = RigidbodyConstraints.FreezeAll;
-            //rb.isKinematic = true;
-
-            StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.hitTarget, thisTargetNum));
+            CameraSwitchCinemachine.instance.PlaySwitchCamera(CameraSwitchCinemachine.arrowState.hitTarget, other.tag);
             StartCoroutine(TL.BlinkTLight(thisTargetNum));
-            //Debug.Log("관중");
-        }
 
-        //Debug.Log(other.tag);
+        }
     }
 }
 

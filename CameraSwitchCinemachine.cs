@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System.Diagnostics;
+using System;
 
 public class CameraSwitchCinemachine : MonoBehaviour
 {
@@ -11,16 +12,17 @@ public class CameraSwitchCinemachine : MonoBehaviour
     public CinemachineVirtualCamera followCamera;
     public CinemachineVirtualCamera targetCamera;
     public KeyCode switchKey = KeyCode.Space; // 전환에 사용할 키
+    private bool isTargetHit = false;
     
     public enum arrowState
     {
         isFollowing,
         hitTarget,
-        hitPlane,
+        hitOther,
         main
     }
 
-    public enum settingMode
+    public enum DistanceMode
     {
         M_145,
         M_50,
@@ -34,17 +36,43 @@ public class CameraSwitchCinemachine : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyDown(switchKey))
-        //{
-        //    SwitchCamera();
-        //}
+
     }
 
-    
-    public IEnumerator SwitchCamera(arrowState state, int targetNum)
+    public void PlaySwitchCamera(arrowState state, String otherTag)
+    {
+        switch(UIManager.instance.GetCameraMode())
+        {
+            case UIManager.CameraMode.ArrowTracking :
+                if(otherTag == "Target")
+                {
+                    isTargetHit = true;
+                }
+                if(isTargetHit)
+                {
+                    StartCoroutine(SwitchCamera(state));
+                }
+                if(!isTargetHit)
+                {
+                    StartCoroutine(SwitchCamera(state));
+                }
+            break;
+
+            case UIManager.CameraMode.Default:
+            break;
+        }
+        
+    }
+    private IEnumerator SwitchCamera(arrowState state)
     {
         switch(state)
         {
+            case arrowState.main:
+                mainCamera.Priority = 10;
+                followCamera.Priority = 5;
+                targetCamera.Priority = 5;
+                break;
+
             case arrowState.isFollowing:
                 mainCamera.Priority = 5;
                 followCamera.Priority = 10;
@@ -53,9 +81,7 @@ public class CameraSwitchCinemachine : MonoBehaviour
             
             case arrowState.hitTarget:
 
-                UIManager.instance.SetHitCount();
-
-                yield return new WaitForSecondsRealtime(3f);
+                yield return new WaitForSecondsRealtime(0.1f);
 
                 mainCamera.Priority = 5;
                 followCamera.Priority = 5;
@@ -67,11 +93,10 @@ public class CameraSwitchCinemachine : MonoBehaviour
                 followCamera.Priority = 5;
                 targetCamera.Priority = 5;
 
-                //UIManager.instance.SetBlinkTLight(targetNum);
-
+                isTargetHit = false;
                 break;
 
-            case arrowState.main:
+            case arrowState.hitOther:
 
                 yield return new WaitForSecondsRealtime(3f);
 
@@ -82,27 +107,24 @@ public class CameraSwitchCinemachine : MonoBehaviour
         }
     }
 
-    public void SetCameraPosition(settingMode mode)
+    public void SetCameraPosition(DistanceMode distance)
     {
-        switch(mode)
+        switch(distance)
         {
-            case settingMode.M_145:
+            case DistanceMode.M_145:
             mainCamera.transform.position = new Vector3(0, Player.instance.transform.position.y, 70);
             followCamera.transform.position = Player.instance.transform.position;
             break;
 
-            case settingMode.M_50:
+            case DistanceMode.M_50:
             mainCamera.transform.position = new Vector3(Player.instance.transform.position.x, Player.instance.transform.position.y, Player.instance.transform.position.z);
             followCamera.transform.position = Player.instance.transform.position;
             break;
 
-            case settingMode.M_30:
+            case DistanceMode.M_30:
             mainCamera.transform.position = new Vector3(Player.instance.transform.position.x, Player.instance.transform.position.y, 130);
             followCamera.transform.position = Player.instance.transform.position;
-            break;
-            
+            break;    
         }
     }
-
-    
 }

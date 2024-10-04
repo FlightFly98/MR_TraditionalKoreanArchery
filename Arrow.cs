@@ -21,6 +21,8 @@ public class Arrow : MonoBehaviour
     private float crossSectionalArea; // 단면적 (m²)
     float arrowMass = 0.028125f; // 화살의 질량 (kg)
 
+    public GameObject markerPrefab;
+
     
 
     void Start()
@@ -86,6 +88,7 @@ public class Arrow : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(velocity);
         }
     }
+    /*
     void ArrowCalVelocity()
     {
         velocity.z = initialSpeed * Mathf.Cos(angleRad) * Time.fixedDeltaTime;
@@ -101,26 +104,72 @@ public class Arrow : MonoBehaviour
             isThisHit = true;
         }
     }
+    */
 
     void FixedUpdate()
     {
-        if (!GameManager.isHit && !isThisHit)
+        if (!isThisHit)
         {
             ArrowCalPosition();
         }
     }
 
+    
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.tag);
+
         if(other.tag != "Arrow")
         {
-            isThisHit = true;
-            velocity = Vector3.zero;
-            Debug.Log(other.tag);
+            if (other.CompareTag("Target"))
+            {
+                Vector3 hitPoint = other.ClosestPointOnBounds(transform.position);
+                
+                StartCoroutine(CreateMarker(hitPoint, other));
+
+                 // 과녁의 표면 법선 벡터 계산
+                Vector3 targetNormal = -other.transform.forward;
+
+                // 일정 범위 내에서 과녁 앞쪽으로만 랜덤한 방향 생성
+                Vector3 randomDirection = GetRandomDirectionWithinAngle(targetNormal, 45f); // 법선을 기준으로 45도 범위 안에서 생성
+
+                float bounceMultiplier = 0.5f; // 튕겨나가는 힘을 더 크게 설정
+                velocity = randomDirection * velocity.magnitude * bounceMultiplier;
+
+                transform.rotation = Quaternion.LookRotation(velocity);
+
+                Debug.Log("randomDirection: " + randomDirection + " | Velocity: " + velocity);
+                
+            }
             if(other.tag != "Target")
             {
-                StartCoroutine(CameraSwitchCinemachine.instance.SwitchCamera(CameraSwitchCinemachine.arrowState.main, 0));
+                isThisHit = true;
+                CameraSwitchCinemachine.instance.PlaySwitchCamera(CameraSwitchCinemachine.arrowState.hitOther, other.tag);
             }
         }
     }
+    Vector3 GetRandomDirectionWithinAngle(Vector3 normal, float maxAngle)
+    {
+        Quaternion rotation = Quaternion.AngleAxis(Random.Range(-maxAngle, maxAngle), Vector3.up); // 좌우 방향으로 랜덤 회전
+        Vector3 randomDirection = rotation * normal;
+
+        Quaternion tiltRotation = Quaternion.AngleAxis(Random.Range(-maxAngle / 2f, maxAngle / 2f), Vector3.right);
+        randomDirection = tiltRotation * randomDirection;
+
+        return randomDirection.normalized;
+    }
+
+    public IEnumerator CreateMarker(Vector3 point, Collider other)
+    {
+        GameObject marker = Instantiate(markerPrefab, point, Quaternion.identity);
+
+        // 마커를 과녁에 맞추도록 조정
+        float Ztemp = marker.transform.position.z - other.transform.position.z;
+        marker.transform.position = new Vector3(marker.transform.position.x, marker.transform.position.y, marker.transform.position.z - Ztemp - 0.05f);
+
+        yield return new WaitForSecondsRealtime(6f);
+
+        marker.SetActive(false);
+    }
+    
 }
