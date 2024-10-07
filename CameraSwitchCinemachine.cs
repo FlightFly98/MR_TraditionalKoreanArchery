@@ -13,7 +13,8 @@ public class CameraSwitchCinemachine : MonoBehaviour
     public CinemachineVirtualCamera targetCamera;
     public KeyCode switchKey = KeyCode.Space; // 전환에 사용할 키
     private bool isTargetHit = false;
-    
+
+    public CameraMode nowCameraMode;
     public enum arrowState
     {
         isFollowing,
@@ -29,21 +30,22 @@ public class CameraSwitchCinemachine : MonoBehaviour
         M_30
     }
 
+    public enum CameraMode
+    {
+        ArrowTracking,
+        Default
+    }
+
     void Awake()
     {
         instance = this;
     }
 
-    void Update()
-    {
-
-    }
-
     public void PlaySwitchCamera(arrowState state, String otherTag)
     {
-        switch(UIManager.instance.GetCameraMode())
+        switch(nowCameraMode)
         {
-            case UIManager.CameraMode.ArrowTracking :
+            case CameraMode.ArrowTracking :
                 if(otherTag == "Target")
                 {
                     isTargetHit = true;
@@ -58,7 +60,7 @@ public class CameraSwitchCinemachine : MonoBehaviour
                 }
             break;
 
-            case UIManager.CameraMode.Default:
+            case CameraMode.Default:
             break;
         }
         
@@ -126,5 +128,15 @@ public class CameraSwitchCinemachine : MonoBehaviour
             followCamera.transform.position = Player.instance.transform.position;
             break;    
         }
+    }
+
+    public void SetCameraMode(CameraMode cameraMode)
+    {
+        nowCameraMode = cameraMode;
+    }
+
+    public CameraMode GetCameraMode()
+    {
+        return nowCameraMode;
     }
 }

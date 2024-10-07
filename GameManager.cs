@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     public float arrowWeight = 0.028125f; // 화살의 무게
     public float initialVelocity; // 화살 초기 속도
     public float launchAngle; // 화살 초기 각도
-    public static bool isHit = false; // 게임에서 화살이 어딘가 맞았을 때
 
     public float kkagjHandYaw; // 깍지손 손등 회전 측정
     public float zoomHandRoll; // 줌손 화살 각도 측정
@@ -34,7 +33,7 @@ public class GameManager : MonoBehaviour
     public float startTime = 0.0f;   // 발시 순간 측정 시작
     public float endTime = 0.0f;     // 충격 센서 작동 측정 끝 시간
     public float elapsedTime;
-    public float limitDistance = 7; // 궁사 ~ 천까지 거리
+    public float limitDistance = 5; // 궁사 ~ 천까지 거리
     public bool isPressureHigh = false;  // 압력 센서를 눌렀는지 확인
     public bool isImpactDetected = false; // 현실에서 충격 센서 감지 확인
 
@@ -52,7 +51,7 @@ public class GameManager : MonoBehaviour
     public void SetGame()
     {
         SetBowK();
-        SetArrowWeight(UIManager.instance.arrowWeightInfo);
+        SetArrowWeight(StartUI.instance.arrowWeightInfo);
     }
     public float GetArrowWeight() { return arrowWeight; }
     public void SetArrowWeight(string inputArrow) 

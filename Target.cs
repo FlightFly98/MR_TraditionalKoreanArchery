@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class Target : MonoBehaviour
 {
     public static Target instance;
-    int arrowHashCode = 0;
 
     string thisTargetName;
     int thisTargetNum;
@@ -25,13 +24,9 @@ public class Target : MonoBehaviour
     {
         if (other.tag == "Arrow")
         {
-            GameManager.isHit = true;
-
-            arrowHashCode = other.GetHashCode();
-
             CameraSwitchCinemachine.instance.PlaySwitchCamera(CameraSwitchCinemachine.arrowState.hitTarget, other.tag);
+            InGameUI.instance.SetHitCount();
             StartCoroutine(TL.BlinkTLight(thisTargetNum));
-
         }
     }
 }

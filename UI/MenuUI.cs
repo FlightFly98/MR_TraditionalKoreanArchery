@@ -1,21 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System;
-using System.Numerics;
 
-public class UIManager : MonoBehaviour
+public class MenuUI : UIBase
 {
-    public static UIManager instance;
-    public Canvas inGameCanvas;
-
-    public bool checkInput = false;
-    public TMP_InputField arrowWeightInputField;
-    public string arrowWeightInfo;
-
+    public static MenuUI instance;
+    public Canvas menuUICanvas;
     public GameObject menuPanel;
     private bool isMenuActive = false;
     public Button dayButton;
@@ -24,41 +13,23 @@ public class UIManager : MonoBehaviour
     public Button Btn_50m;
     public Button Btn_30m;
     public Button DefaultBtn;
-    public Button chaseArrowBtn;
+    public Button arrowTrackingBtn;
     public Light sceneLight; 
     public Material daySkybox;
     public Material nightSkybox;
     public Light[] nightSpotLight;
-
-    public Text hitTargetCountText;
-    int hitCount = 0;
-    public enum CameraMode
-    {
-        ArrowTracking,
-        Default
-    }
-    private CameraMode cameraMode;
 
     void Awake()
     {
         instance = this;
     }
 
-    public void SettingInputField()
+    void Update()
     {
-        arrowWeightInfo = arrowWeightInputField.GetComponent<TMP_InputField>().text;
-
-        checkInput = true;
-    }
-    public void SetHitCount()
-    {
-        hitCount++;
-        hitTargetCountText.text = hitCount.ToString();
-    }
-
-    public void StartMainScene()
-    { 
-       SceneManager.LoadScene(1);
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleMenu();
+        }
     }
 
     void ToggleMenu()
@@ -74,7 +45,7 @@ public class UIManager : MonoBehaviour
         Btn_30m.onClick.AddListener(Set30mMode);
 
         DefaultBtn.onClick.AddListener(SetDefaultMode);
-        chaseArrowBtn.onClick.AddListener(SetChaseArrowMode);
+        arrowTrackingBtn.onClick.AddListener(SetArrowTrackingMode);
 
         // 메뉴가 활성화되면 마우스 커서 활성화
         if (isMenuActive)
@@ -87,6 +58,7 @@ public class UIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        
     }
 
     void SetDayMode()
@@ -94,7 +66,7 @@ public class UIManager : MonoBehaviour
         sceneLight.color = Color.white;     // 조명의 색상을 밝은 흰색으로 설정
         RenderSettings.ambientLight = Color.white; // 씬의 전체 조명 색상을 흰색으로
         RenderSettings.skybox = daySkybox;  // 주간 Skybox 적용
-        hitTargetCountText.color = Color.black;
+        InGameUI.instance.hitTargetCountText.color = Color.black;
         //Debug.Log("주간 모드 활성화");
     }
 
@@ -104,7 +76,7 @@ public class UIManager : MonoBehaviour
         sceneLight.color = Color.blue;      // 조명의 색상을 어두운 파란색으로 설정
         RenderSettings.ambientLight = Color.gray; // 씬의 전체 조명 색상을 회색으로
         RenderSettings.skybox = nightSkybox; // 야간 Skybox 적용
-        hitTargetCountText.color = Color.white;
+        InGameUI.instance.hitTargetCountText.color = Color.white;
         //Debug.Log("야간 모드 활성화");
     }
 
@@ -126,26 +98,14 @@ public class UIManager : MonoBehaviour
         CameraSwitchCinemachine.instance.SetCameraPosition(CameraSwitchCinemachine.DistanceMode.M_30);
     }
 
-    void SetChaseArrowMode()
+    void SetArrowTrackingMode()
     {
-        cameraMode = CameraMode.ArrowTracking;
+        CameraSwitchCinemachine.instance.SetCameraMode(CameraSwitchCinemachine.CameraMode.ArrowTracking);
     }
 
     void SetDefaultMode()
     {
-        cameraMode = CameraMode.Default;
+        CameraSwitchCinemachine.instance.SetCameraMode(CameraSwitchCinemachine.CameraMode.Default);
     }
 
-    public CameraMode GetCameraMode()
-    {
-        return cameraMode;
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ToggleMenu();
-        }
-    }
 }

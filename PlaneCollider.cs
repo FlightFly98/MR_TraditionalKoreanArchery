@@ -9,8 +9,6 @@ public class PlaneCollider : MonoBehaviour
         if(other.tag == "Arrow")
         {
             Debug.Log("on");
-            GameManager.isHit = true;
-
            // Destroy(other.gameObject, 2.5f);
         }
     }

@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
 
     public void Shoot()
     {
-        GameManager.isHit = false;
         GameObject newArrow = Instantiate(arrow, instance.transform);
         if (followCamera != null)
         {

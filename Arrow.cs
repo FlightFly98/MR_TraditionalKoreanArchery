@@ -7,28 +7,22 @@ public class Arrow : MonoBehaviour
     
     // public Rigidbody body;
     bool isThisHit = false;
-    private float ID;
     float initialSpeed;
     float angleDeg;
     float angleRad;
     float kkagjHandYaw = 0;
     float zoomHandRoll;
-    float elapsedTime = 0.0f;
 
     private Vector3 velocity;
     private const float airDensity = 1.225f; // 공기의 밀도 (kg/m³)
     private const float dragCoefficient = 0.25f; // 공기 저항 계수 (화살의 경우 약 0.1 ~ 0.3)
     private float crossSectionalArea; // 단면적 (m²)
     float arrowMass = 0.028125f; // 화살의 질량 (kg)
-
     public GameObject markerPrefab;
 
-    
 
     void Start()
     {
-        ID = this.gameObject.GetInstanceID();
-
         // 발사체의 단면적 계산 (예: 화살의 직경이 0.01 m)
         float diameter = 0.01f; // 화살의 직경 (m)
         crossSectionalArea = Mathf.PI * Mathf.Pow(diameter / 2f, 2f);
@@ -70,7 +64,6 @@ public class Arrow : MonoBehaviour
 
         // 공기 저항력 계산
         Vector3 dragForce = -0.5f * airDensity * dragCoefficient * crossSectionalArea * relativeWindSpeed * relativeWindSpeed * relativeWindVelocity.normalized;
-        //Vector3 dragForce = -0.5f * airDensity * speed * speed * dragCoefficient * crossSectionalArea * velocity.normalized;
 
         // 가속도 계산
         Vector3 gravityVector = new Vector3(0f, Physics.gravity.y, 0f);

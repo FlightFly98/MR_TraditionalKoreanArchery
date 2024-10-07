@@ -26,7 +26,7 @@ public class TLight : MonoBehaviour
     {
         if(targetNum == TLNumber)
         {
-            if(UIManager.instance.GetCameraMode() == UIManager.CameraMode.ArrowTracking)
+            if(CameraSwitchCinemachine.instance.GetCameraMode() == CameraSwitchCinemachine.CameraMode.ArrowTracking)
                 yield return new WaitForSeconds(5.5f);
 
             this.GetComponent<Renderer>().material.color = new Color(1, 0, 0, 1);
@@ -55,7 +55,6 @@ public class TLight : MonoBehaviour
                 count++;
         }
             this.GetComponent<Renderer>().material.color = originColor;
-            UIManager.instance.SetHitCount();
         }
     }
 }
