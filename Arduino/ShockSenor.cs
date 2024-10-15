@@ -17,6 +17,7 @@ public class ShockSenor : ArduinoBase
             GameManager.instance.isImpactDetected = true;
             GameManager.instance.SetInitialVelocity();
             Player.instance.shock = true;
+            //InGameUI.instance.SetSoonText(false);
         }
     }
 

@@ -72,9 +72,9 @@ public class ZoomHand : ArduinoBase
 
         //Debug.Log("Pitch: " + pitch + "Roll: " + roll + "Yaw: " + yaw);
 
-        //GameManager.instance.SetZoomHandPitch(pitch);
+        GameManager.instance.SetZoomHandPitch(pitch);
         GameManager.instance.SetZoomHandRoll(roll);
-        //GameManager.instance.SetZoomHandYaw(yaw);
+        GameManager.instance.SetZoomHandYaw(yaw);
 
     }
     void FixedUpdate()

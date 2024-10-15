@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    
-    // public Rigidbody body;
     bool isThisHit = false;
     float initialSpeed;
     float angleDeg;
     float angleRad;
     float kkagjHandYaw = 0;
-    float zoomHandRoll;
+    float zoomHandYaw;
 
     private Vector3 velocity;
     private const float airDensity = 1.225f; // 공기의 밀도 (kg/m³)
@@ -19,7 +17,6 @@ public class Arrow : MonoBehaviour
     private float crossSectionalArea; // 단면적 (m²)
     float arrowMass = 0.028125f; // 화살의 질량 (kg)
     public GameObject markerPrefab;
-
 
     void Start()
     {
@@ -33,9 +30,9 @@ public class Arrow : MonoBehaviour
         angleDeg = GameManager.instance.GetlaunchAngle();
         angleRad = GameManager.instance.GetlaunchAngle() * Mathf.Deg2Rad;
 
-        //zoomHandRoll = GameManager.instance.GetZoomHandYaw();
+        zoomHandYaw = GameManager.instance.GetZoomHandYaw();
         kkagjHandYaw = GameManager.instance.GetkkagjHandYaw();
-        float rotationRad = kkagjHandYaw * Mathf.Deg2Rad;
+        float rotationRad = zoomHandYaw * Mathf.Deg2Rad;
 
         Quaternion pitchRotation = Quaternion.AngleAxis(angleDeg, Vector3.right);
         //Quaternion yawRotation = Quaternion.AngleAxis(kkagjHandYaw, Vector3.up);
@@ -50,6 +47,7 @@ public class Arrow : MonoBehaviour
             initialSpeed * Mathf.Cos(angleRad) * Mathf.Cos(rotationRad)
             //initialSpeed / (Mathf.Cos(angleRad) * Mathf.Cos(rotationRad));
         );
+        InGameUI.instance.SetSoonText(false);
     }
     void ArrowCalPosition()
     {

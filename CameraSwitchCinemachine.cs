@@ -120,7 +120,7 @@ public class CameraSwitchCinemachine : MonoBehaviour
 
             case DistanceMode.M_50:
             mainCamera.transform.position = new Vector3(Player.instance.transform.position.x, Player.instance.transform.position.y, Player.instance.transform.position.z);
-            followCamera.transform.position = Player.instance.transform.position;
+            followCamera.transform.position = new Vector3(Player.instance.transform.position.x, Player.instance.transform.position.y, Player.instance.transform.position.z + 10);
             break;
 
             case DistanceMode.M_30:
